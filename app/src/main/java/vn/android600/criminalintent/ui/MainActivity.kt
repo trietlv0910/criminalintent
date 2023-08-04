@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import vn.android600.criminalintent.R
+import vn.android600.criminalintent.ui.crimes.CrimeListFragment
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,7 +14,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadDefaultFragment(){
-        val fragment = CrimeFragment.instance()
+        val fragment = CrimeListFragment.instance()
         loadFragment(fragment)
     }
 
