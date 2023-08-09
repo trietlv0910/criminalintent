@@ -3,6 +3,7 @@ package vn.android600.criminalintent.ui.crimes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import vn.android600.criminalintent.R
@@ -30,10 +31,14 @@ class CrimeAdapter(private val crimes : List<Crime>) : RecyclerView.Adapter<Crim
         private val dateTextView : TextView by lazy {
             itemView.findViewById(R.id.date_tv)
         }
+        private val solvedImageView : ImageView by lazy {
+            itemView.findViewById(R.id.imageView)
+        }
 
         fun bind(crime: Crime){
             titleTextView.text = crime.title
             dateTextView.text = crime.date.toString()
+            solvedImageView.visibility = if (crime.isSolved)  View.VISIBLE else View.INVISIBLE
         }
     }
 }
