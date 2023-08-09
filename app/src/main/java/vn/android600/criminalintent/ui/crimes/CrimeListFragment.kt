@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -14,11 +15,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import vn.android600.criminalintent.R
 import vn.android600.criminalintent.ui.MainActivity
+import java.util.UUID
 
 class CrimeListFragment : Fragment() {
 
-    fun interface Callback{
+    interface Callback{
         fun onAddCrimeItemClick()
+        fun onCrimeEdit(uuid: UUID)
     }
 
 
@@ -26,7 +29,7 @@ class CrimeListFragment : Fragment() {
     private lateinit var crimesRecyclerView: RecyclerView
     private lateinit var adapter: CrimeAdapter
 
-    private val viewModel : CrimeListViewModel by viewModels()
+    private val viewModel : CrimeListViewModel by activityViewModels()
 
     private var callback : Callback? =  null
 
@@ -77,6 +80,9 @@ class CrimeListFragment : Fragment() {
 
     private  fun updateUI(){
         adapter = CrimeAdapter(viewModel.crimes)
+        adapter.setOnCrimeItemClickListener{
+           callback?.onCrimeEdit(it)
+        }
         crimesRecyclerView.adapter = adapter
     }
 

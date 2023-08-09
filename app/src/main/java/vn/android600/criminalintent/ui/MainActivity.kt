@@ -9,10 +9,15 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import vn.android600.criminalintent.R
 import vn.android600.criminalintent.ui.crimes.CrimeListFragment
+import java.util.*
 
 class MainActivity : AppCompatActivity(), CrimeListFragment.Callback {
     override fun onAddCrimeItemClick() {
         loadFragment(CrimeFragment.instance())
+    }
+
+    override fun onCrimeEdit(uuid: UUID) {
+        loadFragment(CrimeFragment.instance(uuid))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
