@@ -8,9 +8,19 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import vn.android600.criminalintent.R
 import vn.android600.criminalintent.models.Crime
+import java.util.UUID
 
 class CrimeAdapter(private val crimes : List<Crime>) : RecyclerView.Adapter<CrimeAdapter.CrimeHolder>() {
 
+    fun interface Callback{
+        fun onCrimeItemClick(uuid: UUID)
+    }
+
+    private var callback : Callback? = null
+
+    fun setOnCrimeItemClickListener(callback: Callback){
+        this.callback = callback
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CrimeHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_crime, parent, false)
@@ -20,6 +30,9 @@ class CrimeAdapter(private val crimes : List<Crime>) : RecyclerView.Adapter<Crim
     override fun onBindViewHolder(holder: CrimeHolder, position: Int) {
         val crime = crimes[position]
         holder.bind(crime)
+        holder.itemView.setOnClickListener {
+            callback?.onCrimeItemClick(crime.id)
+        }
     }
 
     override fun getItemCount() = crimes.size
