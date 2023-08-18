@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import vn.android600.criminalintent.R
-import vn.android600.criminalintent.models.Crime
+import vn.android600.criminalintent.data.models.Crime
 import java.util.UUID
 
 class CrimeAdapter(private val crimes : List<Crime>) : RecyclerView.Adapter<CrimeAdapter.CrimeHolder>() {

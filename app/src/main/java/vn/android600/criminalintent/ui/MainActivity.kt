@@ -8,6 +8,7 @@ import android.view.MenuItem
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import vn.android600.criminalintent.R
+import vn.android600.criminalintent.data.repositories.CrimeRepository
 import vn.android600.criminalintent.ui.crimes.CrimeListFragment
 import java.util.*
 

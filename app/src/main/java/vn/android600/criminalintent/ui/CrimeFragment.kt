@@ -13,7 +13,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import vn.android600.criminalintent.R
-import vn.android600.criminalintent.models.Crime
+import vn.android600.criminalintent.data.models.Crime
 import vn.android600.criminalintent.ui.crimes.CrimeListViewModel
 import java.util.UUID
 
@@ -23,7 +23,7 @@ class CrimeFragment : Fragment() {
     private lateinit var dateButton: Button
     private lateinit var solvedCheckBox : CheckBox
     private lateinit var titleEditText: EditText
-    private lateinit var crime:Crime
+    private lateinit var crime: Crime
 
     private val viewModel : CrimeListViewModel by activityViewModels()
 
