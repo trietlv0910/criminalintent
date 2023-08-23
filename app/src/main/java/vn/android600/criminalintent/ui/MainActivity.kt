@@ -2,14 +2,10 @@ package vn.android600.criminalintent.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import vn.android600.criminalintent.R
-import vn.android600.criminalintent.data.repositories.CrimeRepository
 import vn.android600.criminalintent.ui.crimes.CrimeListFragment
+import vn.android600.criminalintent.ui.detail.CrimeFragment
 import java.util.*
 
 class MainActivity : AppCompatActivity(), CrimeListFragment.Callback {

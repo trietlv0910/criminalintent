@@ -16,7 +16,7 @@ class CrimeRepository private  constructor(context: Context){
 
     private val crimeDao = database.crimeDao()
 
-    fun getCrimes() : List<Crime> = crimeDao.getCrimes()
+    fun getCrimes() = crimeDao.getCrimes()
 
     fun getCrimeById(uuid: UUID) = crimeDao.getCrimeById(uuid)
 

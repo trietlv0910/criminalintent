@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import vn.android600.criminalintent.R
+import vn.android600.criminalintent.data.models.Crime
 import vn.android600.criminalintent.ui.MainActivity
 import java.util.UUID
 
@@ -29,7 +30,7 @@ class CrimeListFragment : Fragment() {
     private lateinit var crimesRecyclerView: RecyclerView
     private lateinit var adapter: CrimeAdapter
 
-    private val viewModel : CrimeListViewModel by activityViewModels()
+    private val viewModel : CrimeListViewModel by viewModels()
 
     private var callback : Callback? =  null
 
@@ -49,13 +50,17 @@ class CrimeListFragment : Fragment() {
     ): View {
         root = inflater.inflate(R.layout.fragment_list_crime, container, false)
         initViews()
-        updateUI()
+
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupMenu()
+        viewModel.crimesLiveData.observe(viewLifecycleOwner){
+            // callback
+            updateUI(it)
+        }
     }
     private fun setupMenu(){
         val menuHost : MenuHost = requireActivity()
@@ -78,8 +83,8 @@ class CrimeListFragment : Fragment() {
         crimesRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL,false)
     }
 
-    private  fun updateUI(){
-        adapter = CrimeAdapter(viewModel.crimes)
+    private  fun updateUI(crimes : List<Crime>){
+        adapter = CrimeAdapter(crimes)
         adapter.setOnCrimeItemClickListener{
            callback?.onCrimeEdit(it)
         }

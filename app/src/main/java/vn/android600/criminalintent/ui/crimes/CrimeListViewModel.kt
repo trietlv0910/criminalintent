@@ -9,15 +9,6 @@ class CrimeListViewModel : ViewModel(){
 
     private val crimeRepository = CrimeRepository.get()
 
-    val crimes = mutableListOf<Crime>()
+    val crimesLiveData = crimeRepository.getCrimes()
 
-    init {
-        Thread(Runnable {
-            crimes.addAll(crimeRepository.getCrimes())
-        }).start()
-    }
-
-    fun findCrimeById(id : String) = crimes.find {
-        it.id == UUID.fromString(id)
-    }
 }
