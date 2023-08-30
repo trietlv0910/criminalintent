@@ -1,23 +1,24 @@
 package vn.android600.criminalintent.ui.crimes
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import vn.android600.criminalintent.R
+import vn.android600.criminalintent.data.models.Crime
 import vn.android600.criminalintent.ui.MainActivity
 import java.util.UUID
 
-class CrimeListFragment : Fragment() {
+class CrimeListFragment : Fragment(), CrimeAdapter.Callback {
 
     interface Callback{
         fun onAddCrimeItemClick()
@@ -29,7 +30,7 @@ class CrimeListFragment : Fragment() {
     private lateinit var crimesRecyclerView: RecyclerView
     private lateinit var adapter: CrimeAdapter
 
-    private val viewModel : CrimeListViewModel by activityViewModels()
+    private val viewModel : CrimeListViewModel by viewModels()
 
     private var callback : Callback? =  null
 
@@ -49,13 +50,17 @@ class CrimeListFragment : Fragment() {
     ): View {
         root = inflater.inflate(R.layout.fragment_list_crime, container, false)
         initViews()
-        updateUI()
+
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupMenu()
+        viewModel.crimesLiveData.observe(viewLifecycleOwner){
+            // callback
+            updateUI(it)
+        }
     }
     private fun setupMenu(){
         val menuHost : MenuHost = requireActivity()
@@ -78,13 +83,32 @@ class CrimeListFragment : Fragment() {
         crimesRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL,false)
     }
 
-    private  fun updateUI(){
-        adapter = CrimeAdapter(viewModel.crimes)
-        adapter.setOnCrimeItemClickListener{
-           callback?.onCrimeEdit(it)
-        }
+    private  fun updateUI(crimes : List<Crime>){
+        adapter = CrimeAdapter(crimes)
+        adapter.setOnCrimeItemClickListener(this)
         crimesRecyclerView.adapter = adapter
     }
+
+    override fun onCrimeItemClick(uuid: UUID) {
+        callback?.onCrimeEdit(uuid)
+    }
+
+    override fun onCrimeItemLongClick(crime: Crime) {
+        confirmDeleteItemDialog(crime).show()
+    }
+
+    private fun getDialogBuilder(crime: Crime) = AlertDialog.Builder(requireContext()).apply {
+        this.setTitle("Notification")
+        this.setMessage("Are you sure you want to delete this item?")
+        this.setPositiveButton("Yes") { dialog, _ ->
+            viewModel.deleteCrime(crime)
+            dialog.dismiss()
+        }
+        this.setNegativeButton("No"){dialog,_ ->
+            dialog.dismiss()
+        }
+    }
+    private fun confirmDeleteItemDialog(deleteCrime: Crime) = getDialogBuilder(deleteCrime).create()
 
     companion object{
         fun instance() = CrimeListFragment()

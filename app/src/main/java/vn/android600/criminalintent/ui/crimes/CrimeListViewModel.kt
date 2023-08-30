@@ -1,23 +1,17 @@
 package vn.android600.criminalintent.ui.crimes
 
 import androidx.lifecycle.ViewModel
-import vn.android600.criminalintent.models.Crime
+import vn.android600.criminalintent.data.models.Crime
+import vn.android600.criminalintent.data.repositories.CrimeRepository
 import java.util.*
 
 class CrimeListViewModel : ViewModel(){
 
-    val crimes = mutableListOf<Crime>()
+    private val crimeRepository = CrimeRepository.get()
 
-    init {
-        for (i in 0 until 100){
-            val crimeTmp = Crime(title = "Crime #$i")
-            crimeTmp.isSolved = i % 2 ==0
-            crimes += crimeTmp
+    val crimesLiveData = crimeRepository.getCrimes()
 
-        }
-    }
-
-    fun findCrimeById(id : String) = crimes.find {
-        it.id == UUID.fromString(id)
+    fun deleteCrime(crime: Crime){
+        crimeRepository.deleteCrime(crime)
     }
 }

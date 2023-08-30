@@ -7,13 +7,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import vn.android600.criminalintent.R
-import vn.android600.criminalintent.models.Crime
+import vn.android600.criminalintent.data.models.Crime
 import java.util.UUID
 
 class CrimeAdapter(private val crimes : List<Crime>) : RecyclerView.Adapter<CrimeAdapter.CrimeHolder>() {
 
-    fun interface Callback{
+    interface Callback{
         fun onCrimeItemClick(uuid: UUID)
+        fun onCrimeItemLongClick(crime: Crime)
     }
 
     private var callback : Callback? = null
@@ -32,6 +33,10 @@ class CrimeAdapter(private val crimes : List<Crime>) : RecyclerView.Adapter<Crim
         holder.bind(crime)
         holder.itemView.setOnClickListener {
             callback?.onCrimeItemClick(crime.id)
+        }
+        holder.itemView.setOnLongClickListener {
+            callback?.onCrimeItemLongClick(crime)
+            true
         }
     }
 
