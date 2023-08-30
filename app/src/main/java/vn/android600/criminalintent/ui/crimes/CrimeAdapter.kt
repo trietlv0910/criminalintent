@@ -12,8 +12,9 @@ import java.util.UUID
 
 class CrimeAdapter(private val crimes : List<Crime>) : RecyclerView.Adapter<CrimeAdapter.CrimeHolder>() {
 
-    fun interface Callback{
+    interface Callback{
         fun onCrimeItemClick(uuid: UUID)
+        fun onCrimeItemLongClick(crime: Crime)
     }
 
     private var callback : Callback? = null
@@ -32,6 +33,10 @@ class CrimeAdapter(private val crimes : List<Crime>) : RecyclerView.Adapter<Crim
         holder.bind(crime)
         holder.itemView.setOnClickListener {
             callback?.onCrimeItemClick(crime.id)
+        }
+        holder.itemView.setOnLongClickListener {
+            callback?.onCrimeItemLongClick(crime)
+            true
         }
     }
 

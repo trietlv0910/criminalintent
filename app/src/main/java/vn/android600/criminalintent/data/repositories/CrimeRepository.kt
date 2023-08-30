@@ -5,8 +5,11 @@ import androidx.room.Room
 import vn.android600.criminalintent.data.CrimeDatabase
 import vn.android600.criminalintent.data.models.Crime
 import java.util.UUID
+import java.util.concurrent.Executors
 
 class CrimeRepository private  constructor(context: Context){
+
+    private val executor = Executors.newSingleThreadExecutor()
 
     private val database : CrimeDatabase = Room.databaseBuilder(
         context.applicationContext,
@@ -19,6 +22,24 @@ class CrimeRepository private  constructor(context: Context){
     fun getCrimes() = crimeDao.getCrimes()
 
     fun getCrimeById(uuid: UUID) = crimeDao.getCrimeById(uuid)
+
+    fun insertCrime(crime: Crime){
+        executor.execute {
+            crimeDao.insertCrime(crime)
+        }
+    }
+
+    fun updateCrime(crime: Crime){
+        executor.execute {
+            crimeDao.updateCrime(crime)
+        }
+    }
+
+    fun deleteCrime(crime : Crime){
+        executor.execute {
+            crimeDao.deleteCrime(crime)
+        }
+    }
 
     companion object {
         private var INSTANCE : CrimeRepository? = null

@@ -11,4 +11,7 @@ class CrimeListViewModel : ViewModel(){
 
     val crimesLiveData = crimeRepository.getCrimes()
 
+    fun deleteCrime(crime: Crime){
+        crimeRepository.deleteCrime(crime)
+    }
 }
