@@ -11,8 +11,12 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import vn.android600.criminalintent.R
 import vn.android600.criminalintent.data.models.Crime
 import vn.android600.criminalintent.ui.MainActivity
@@ -57,9 +61,12 @@ class CrimeListFragment : Fragment(), CrimeAdapter.Callback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupMenu()
-        viewModel.crimesLiveData.observe(viewLifecycleOwner){
-            // callback
-            updateUI(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.crimeListStateFlow.collect{
+                    updateUI(it)
+                }
+            }
         }
     }
     private fun setupMenu(){

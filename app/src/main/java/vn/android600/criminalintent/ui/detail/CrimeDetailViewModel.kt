@@ -1,9 +1,13 @@
 package vn.android600.criminalintent.ui.detail
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.switchMap
+import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import vn.android600.criminalintent.data.models.Crime
 import vn.android600.criminalintent.data.repositories.CrimeRepository
 import java.util.UUID
@@ -11,20 +15,23 @@ import java.util.UUID
 class CrimeDetailViewModel : ViewModel() {
     private val crimeRepository = CrimeRepository.get()
 
-    private val crimeMutableLiveData = MutableLiveData<UUID>()
-
-    val crimeLiveData : LiveData<Crime?> = crimeMutableLiveData.switchMap {
-        crimeRepository.getCrimeById(it)
-    }
+    private val crimeMStateFlow : MutableStateFlow<Crime?> = MutableStateFlow(null)
+    val crimeStateFlow : StateFlow<Crime?> = crimeMStateFlow.asStateFlow()
 
     fun loadCrime(uuidStr : String){
-        crimeMutableLiveData.value = UUID.fromString(uuidStr)
+        viewModelScope.launch{
+            crimeMStateFlow.value = crimeRepository.getCrimeById(UUID.fromString(uuidStr))
+        }
     }
 
     fun saveCrime(crime: Crime){
-        crimeRepository.insertCrime(crime)
+        viewModelScope.launch {
+            crimeRepository.insertCrime(crime)
+        }
     }
     fun updateCrime(crime: Crime){
-        crimeRepository.updateCrime(crime)
+        viewModelScope.launch {
+            crimeRepository.updateCrime(crime)
+        }
     }
 }

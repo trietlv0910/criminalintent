@@ -14,6 +14,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import vn.android600.criminalintent.R
 import vn.android600.criminalintent.data.models.Crime
 import vn.android600.criminalintent.ui.crimes.CrimeListViewModel
@@ -57,10 +62,14 @@ class CrimeFragment : Fragment() {
         isUpdateMode =
             if (crimeId != null){
                 viewModel.loadCrime(crimeId)
-                viewModel.crimeLiveData.observe(viewLifecycleOwner){
-                    if (it != null) {
-                        this.crime = it
-                        updateUI()
+                viewLifecycleOwner.lifecycleScope.launch {
+                    viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                        viewModel.crimeStateFlow.collect{
+                            it?.let {
+                                this@CrimeFragment.crime = it
+                                updateUI()
+                            }
+                        }
                     }
                 }
                 true
