@@ -1,5 +1,6 @@
 package vn.android600.criminalintent.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment

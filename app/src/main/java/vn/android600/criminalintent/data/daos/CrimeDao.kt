@@ -2,25 +2,21 @@ package vn.android600.criminalintent.data.daos
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 import vn.android600.criminalintent.data.models.Crime
 import java.util.UUID
 
 
 @Dao
 interface CrimeDao {
-
     @Query("SELECT * FROM crime")
-    fun getCrimes() : LiveData<List<Crime>>
-
+    fun getCrimes() : Flow<List<Crime>>
     @Query("SELECT * FROM crime WHERE id = (:id)")
-    fun getCrimeById(id: UUID) : LiveData<Crime?>
-
+    suspend fun getCrimeById(id: UUID) : Crime?
     @Insert
-    fun insertCrime(crime: Crime)
-
+    suspend fun insertCrime(crime: Crime)
     @Update
-    fun updateCrime(crime: Crime)
-
+    suspend fun updateCrime(crime: Crime)
     @Delete
-    fun deleteCrime(crime: Crime)
+    suspend fun deleteCrime(crime: Crime)
 }
